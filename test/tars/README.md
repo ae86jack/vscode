@@ -20,3 +20,12 @@
   extraArgs: []
 }
 ```
+
+
+## quokka.js
+
+quokka新建js，里面data-uri是`untitled:Untitled-1`
+
+```js
+await app.workbench.editor.waitForTypeInEditor('untitled:Untitled-1', '');
+```
