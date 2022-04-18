@@ -84,6 +84,34 @@ export class Editor {
 		await this.code.waitForActiveElement(textarea);
 	}
 
+	async waitForEditorSpanFocus(filename: string, lineNumber: number, spanNumber: number, selectorPrefix = ''): Promise<void> {
+		const editor = [selectorPrefix || '', EDITOR(filename)].join(' ');
+		const span = `${editor} .view-lines > .view-line:nth-child(${lineNumber}) > span > span:nth-child(${spanNumber})`;
+		const textarea = `${editor} textarea`;
+
+		await this.code.waitAndClick(span, 0, 0);
+		await this.code.waitForActiveElement(textarea);
+	}
+
+
+	async getTextContentInLine(filename: string, lineNumber: number, selectorPrefix = ''): Promise<string> {
+		const editor = [selectorPrefix || '', EDITOR(filename)].join(' ');
+		const line = `${editor} .view-lines > .view-line:nth-child(${lineNumber})`;
+		return await this.code.getTextContent(line);
+	}
+
+	async insertLine(): Promise<void> {
+		if (process.platform === 'darwin') {
+			await this.code.dispatchKeybinding('cmd+enter');
+		} else {
+			throw new Error(`NotImplementedError`);
+		}
+	}
+
+	async dispatchKeybinding(key: string) {
+		await this.code.dispatchKeybinding(key);
+	}
+
 	async waitForTypeInEditor(filename: string, text: string, selectorPrefix = ''): Promise<any> {
 		const editor = [selectorPrefix || '', EDITOR(filename)].join(' ');
 

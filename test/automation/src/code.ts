@@ -75,6 +75,7 @@ export async function launch(options: LaunchOptions): Promise<Code> {
 		throw new Error('Smoke test process has terminated, refusing to spawn Code');
 	}
 
+	await measureAndLog(copyExtension(rootPath, options.extensionsPath, 'wallabyjs.quokka-vscode-1.0.456'), 'copyExtension(wallabyjs.quokka-vscode-1.0.456)', options.logger);
 	await measureAndLog(copyExtension(rootPath, options.extensionsPath, 'vscode-notebook-tests'), 'copyExtension(vscode-notebook-tests)', options.logger);
 
 	// Browser smoke tests
@@ -189,6 +190,12 @@ export class Code {
 			`get text content '${selector}'`,
 			retryCount
 		);
+	}
+
+	async getTextContent(selector: string): Promise<string> {
+		const windowId = await this.getActiveWindowId();
+		const els = await this.driver.getElements(windowId, selector);
+		return els[0].textContent;
 	}
 
 	async waitAndClick(selector: string, xoffset?: number, yoffset?: number, retryCount: number = 200): Promise<void> {
