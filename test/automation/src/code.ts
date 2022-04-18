@@ -193,8 +193,7 @@ export class Code {
 	}
 
 	async getTextContent(selector: string): Promise<string> {
-		const windowId = await this.getActiveWindowId();
-		const els = await this.driver.getElements(windowId, selector);
+		const els = await this.driver.getElements(selector);
 		return els[0].textContent;
 	}
 
