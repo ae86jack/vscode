@@ -601,6 +601,17 @@
 						]
 					},
 					{
+						"target": "test/tars/**",
+						"restrictions": [
+							"test/automation",
+							"test/tars/**",
+							"@vscode/*",
+							"@parcel/*",
+							"@playwright/*",
+							"*" // node modules
+						]
+					},
+					{
 						"target": "test/automation/**",
 						"restrictions": [
 							"test/automation/**",
