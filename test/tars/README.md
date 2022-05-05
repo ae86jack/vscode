@@ -30,13 +30,18 @@ quokka新建js，里面data-uri是`untitled:Untitled-1`
 await app.workbench.editor.waitForTypeInEditor('untitled:Untitled-1', '');
 ```
 
-
 ## playwright
 
 playwright工程里的packages/playwright-core/src/server的 input.ts文件很有参考价值。
 
 playwright虽然有slowMo属性可以配置，Electron却没有这个属性。但为了精细控制，我们最好不要这个slowMo属性。
 
+
+playwrightElectron在window初始化后
+
+```js
+window.setViewportSize({ width: 800, height: 1200 });
+```
 
 ## 自动补全
 
