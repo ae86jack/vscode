@@ -100,18 +100,6 @@ export class Editor {
 		return await this.code.getTextContent(line);
 	}
 
-	async insertLine(): Promise<void> {
-		if (process.platform === 'darwin') {
-			await this.code.dispatchKeybinding('cmd+enter');
-		} else {
-			throw new Error(`NotImplementedError`);
-		}
-	}
-
-	async dispatchKeybinding(key: string) {
-		await this.code.dispatchKeybinding(key);
-	}
-
 	async waitForTypeInEditor(filename: string, text: string, selectorPrefix = ''): Promise<any> {
 		const editor = [selectorPrefix || '', EDITOR(filename)].join(' ');
 

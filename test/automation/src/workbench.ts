@@ -21,6 +21,7 @@ import { Code } from './code';
 import { Terminal } from './terminal';
 import { Notebook } from './notebook';
 import { Localization } from './localization';
+import { Keyboard } from './input';
 
 export interface Commands {
 	runCommand(command: string): Promise<any>;
@@ -45,6 +46,7 @@ export class Workbench {
 	readonly terminal: Terminal;
 	readonly notebook: Notebook;
 	readonly localization: Localization;
+	readonly keyboard: Keyboard;
 
 	constructor(code: Code, userDataPath: string) {
 		this.editors = new Editors(code);
@@ -64,5 +66,6 @@ export class Workbench {
 		this.terminal = new Terminal(code, this.quickaccess, this.quickinput);
 		this.notebook = new Notebook(this.quickaccess, code);
 		this.localization = new Localization(code);
+		this.keyboard = new Keyboard(code);
 	}
 }

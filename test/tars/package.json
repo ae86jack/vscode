@@ -9,14 +9,15 @@
     "watch-smoke": "node ../../node_modules/typescript/bin/tsc --watch --preserveWatchOutput",
     "watch": "npm-run-all -lp watch-automation watch-smoke",
     "mocha": "node ../node_modules/mocha/bin/mocha",
-    "start": "node ./out/main.js"
+    "start": "node ./out/lessonFor.js"
   },
   "dependencies": {
     "@vscode/test-electron": "2.1.0-beta.0",
     "mkdirp": "^1.0.4",
     "ncp": "^2.0.0",
     "node-fetch": "^2.6.7",
-    "rimraf": "3.0.2"
+    "rimraf": "3.0.2",
+    "ws": "^8.5.0"
   },
   "devDependencies": {
     "@types/mkdirp": "^1.0.1",
@@ -25,6 +26,7 @@
     "@types/node": "16.x",
     "@types/node-fetch": "^2.5.10",
     "@types/rimraf": "3.0.2",
+    "@types/ws": "^8.5.3",
     "npm-run-all": "^4.1.5",
     "watch": "^1.0.2"
   }

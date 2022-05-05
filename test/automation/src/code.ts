@@ -197,6 +197,27 @@ export class Code {
 		return els[0].textContent;
 	}
 
+	// by xsj
+	async keyboardDown(key: string) {
+		await this.driver.keyboardDown(key);
+	}
+
+	async keyboardUp(key: string) {
+		await this.driver.keyboardUp(key);
+	}
+
+	async insertText(text: string) {
+		await this.driver.insertText(text);
+	}
+
+	async keyboardType(text: string, options?: { delay?: number }) {
+		await this.driver.keyboardType(text, options);
+	}
+
+	async keyboardPress(key: string, options?: { delay?: number }) {
+		await this.driver.keyboardPress(key, options);
+	}
+
 	async waitAndClick(selector: string, xoffset?: number, yoffset?: number, retryCount: number = 200): Promise<void> {
 		await this.poll(() => this.driver.click(selector, xoffset, yoffset), () => true, `click '${selector}'`, retryCount);
 	}

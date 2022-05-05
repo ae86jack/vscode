@@ -212,4 +212,25 @@ export class PlaywrightDriver {
 	private async getDriverHandle(): Promise<playwright.JSHandle<IWindowDriver>> {
 		return this.page.evaluateHandle('window.driver');
 	}
+
+	// by xsj
+	async keyboardDown(key: string) {
+		await this.page.keyboard.down(key);
+	}
+
+	async keyboardUp(key: string) {
+		await this.page.keyboard.up(key);
+	}
+
+	async insertText(text: string) {
+		await this.page.keyboard.insertText(text);
+	}
+
+	async keyboardType(text: string, options?: { delay?: number }) {
+		await this.page.keyboard.type(text, options);
+	}
+
+	async keyboardPress(key: string, options: { delay?: number } = {}) {
+		await this.page.keyboard.press(key, options);
+	}
 }
