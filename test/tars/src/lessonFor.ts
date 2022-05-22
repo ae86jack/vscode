@@ -98,16 +98,27 @@ async function run(): Promise<void> {
 
 	app = createApp(defaultOptions);
 	await app.start();
+	scriptPlayer.begin();
 	const editor = app.workbench.editor;
 	const keyboard = app.workbench.keyboard;
 
 	// await app.workbench.quickaccess.openFile(path.join(app.workspacePathOrFolder, 'README.md'));
 	await keyboard.dispatch('cmd+b');
 
-	await app.workbench.quickaccess.runCommand('quokka.createJavaScriptFile');
+	const file = 'for-in-for-of-foreach-draft.js';
+	// quickaccess.openFile依赖配置 "workbench.editor.showTabs": true
+	await app.workbench.quickaccess.openFile(path.join(app.workspacePathOrFolder, 'draft', file));
 
-	const file = 'untitled:Untitled-1';
-	let line = 0;
+	// 启动前，先设置好。 settings.zoomlevel: 3
+	// await keyboard.dispatch('cmd+-');
+	// await keyboard.dispatch('cmd+-');
+	// await keyboard.dispatch('cmd+-');
+	await app.workbench.quickaccess.runCommand('quokka.makeQuokkaFromExistingFile');
+
+	// close panel, terminal
+	// await new Promise(x => setTimeout(x, 1000));
+	// await keyboard.dispatch('cmd+j');
+	let line = 12;
 
 	start(`我们先写个for in例子。for in循环遍历对象的属性`);
 	await editor.waitForEditorFocus(file, ++line);
@@ -153,6 +164,13 @@ async function run(): Promise<void> {
 	await keyboard.type(`console.log(prop);`);
 	await end();
 
+	const srt = scriptPlayer.getSrt();
+	const speakXmlFile = path.join(testDataPath, 'speak.srt');
+	await fs.promises.writeFile(speakXmlFile, srt);
+	console.log('Saved to ' + speakXmlFile);
+	// console.log(srt);
+
+	app.stop();
 	// save
 	// await app.workbench.editors.saveOpenedFile();
 }

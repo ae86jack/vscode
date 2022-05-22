@@ -89,7 +89,9 @@ export class SimulateScriptPlayer extends EventEmitter {
 	private _scripts: string[] = [];
 	readonly _simulate: boolean;
 	public _waitingForSprite = new Map<string, 'unknown' | 'playing' | 'end'>();
-
+	private _begin: number;
+	private _lines: [number, number][] = [];
+	private _subTexts: string[] = [];
 	// 发送台词
 
 	constructor() {
@@ -97,21 +99,59 @@ export class SimulateScriptPlayer extends EventEmitter {
 		this._simulate = true;
 	}
 
+	begin() {
+		this._begin = Date.now();
+		console.log(this._begin);
+	}
+
 	playScript(script: string): string {
 		this._scripts.push(script);
 		const spriteId = this._scripts.length.toString();
 		console.log(`>>>${script}`);
+		const start = Date.now();
 		const timeout = script.length / 5 * 1000;
 		this._waitingForSprite.set(spriteId, 'playing');
 		setTimeout(() => {
 			this._waitingForSprite.set(spriteId, 'end');
 			this.emit('audioSpriteEnd', spriteId);
 		}, timeout);
+		this._subTexts.push(script);
+		console.log(`start=${start - this._begin}`);
+
+		this._lines.push([start - this._begin, start - this._begin + timeout]);
+		// console.log(this._lines);
 		return spriteId.toString();
 	}
 
 	getSpriteStatus(spriteId: string): 'unknown' | 'playing' | 'end' {
 		return this._waitingForSprite.get(spriteId) || 'unknown';
+	}
+
+	getSrt() {
+		let srt = '';
+		for (let i = 0; i < this._subTexts.length; i++) {
+			// line number
+			srt += i + 1 + '\n';
+			// line time
+			let sh, sm, ss, sms;
+			let eh, em, es, ems;
+			const [timeStart, timeEnd] = this._lines[i];
+			const leftPad = str => `${str}`.padStart(2, '0');
+			const leftPad3 = str => `${str}`.padStart(3, '0');
+			sh = leftPad(Math.floor(timeStart / 3600000));
+			sm = leftPad(Math.floor((timeStart % 3600000) / 60000));
+			ss = leftPad(Math.floor(timeStart % 60000 / 1000));
+			sms = leftPad3(Math.floor(timeStart % 1000));
+			eh = leftPad(Math.floor(timeEnd / 3600000));
+			em = leftPad(Math.floor((timeEnd % 3600000) / 60000));
+			es = leftPad(Math.floor(timeEnd % 60000 / 1000));
+			ems = leftPad3(Math.floor(timeEnd % 1000));
+
+			srt += `${sh}:${sm}:${ss},${sms} --> ${eh}:${em}:${es},${ems}\n`;
+			srt += this._subTexts[i];
+			srt += '\n\n';
+		}
+		return srt;
 	}
 
 	async close() { }
