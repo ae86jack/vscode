@@ -8,7 +8,7 @@ import * as path from 'path';
 import * as mkdirp from 'mkdirp';
 import { Application, MultiLogger, Logger, FileLogger } from '../../automation';
 import { createApp } from './utils';
-import { SimulateScriptPlayer } from './base';
+import { ScriptPlayer, getTimeFormat } from './base';
 
 let app: Application | undefined = undefined;
 
@@ -75,7 +75,8 @@ const defaultOptions = {
 };
 
 async function run(): Promise<void> {
-	const scriptPlayer = new SimulateScriptPlayer();
+	const scriptPlayer = new ScriptPlayer(testDataPath);
+	await scriptPlayer.loadConfig();
 
 	const sprites: string[] = [];
 	const start = (script: string) => {
@@ -98,7 +99,8 @@ async function run(): Promise<void> {
 
 	app = createApp(defaultOptions);
 	await app.start();
-	scriptPlayer.begin();
+	console.log(getTimeFormat() + ' app start');
+	// scriptPlayer.begin();
 	const editor = app.workbench.editor;
 	const keyboard = app.workbench.keyboard;
 
@@ -120,12 +122,12 @@ async function run(): Promise<void> {
 	// await keyboard.dispatch('cmd+j');
 	let line = 12;
 
-	start(`我们先写个for in例子。for in循环遍历对象的属性`);
+	start(`我们先写个for in例子。for in循环遍历对象的属性。`);
 	await editor.waitForEditorFocus(file, ++line);
 	await keyboard.type(`for (let property in ['a', 'b', 'c'])`);
 	await end();
 
-	start(`属性单词property，不妨缩写为P-R-O-P`);
+	start(`属性单词property，不妨缩写为P-R-O-P。`);
 	for (let i = 0; i < ` in ['a', 'b', 'c'])`.length; i++) {
 		await keyboard.dispatch('left');
 	}
@@ -134,25 +136,25 @@ async function run(): Promise<void> {
 	await keyboard.type('prop');
 	await end();
 
-	start(`循环数组，用console打印出来。输出是数组的下标`);
+	start(`循环数组，用console打印出来。输出是数组的下标。`);
 	await keyboard.insertLine();
 	await keyboard.dispatch('Tab');
 	await keyboard.type(`console.log(prop);`);
 	await end();
 
-	start(`遍历字符串的属性`);
+	start(`遍历字符串的属性。`);
 	await keyboard.insertLine();
 	await keyboard.dispatch('shift+Tab');
 	await keyboard.type(`for (let prop in 'str')`);
 	await end();
 
-	start(`得到是字符的下标`);
+	start(`得到是字符的下标。`);
 	await keyboard.insertLine();
 	await keyboard.dispatch('Tab');
 	await keyboard.type(`console.log(prop);`);
 	await end();
 
-	start(`上面的两种用法比较少见，这个就很常见，遍历字典`);
+	start(`上面的两种用法比较少见，这个就很常见，遍历字典。`);
 	await keyboard.insertLine();
 	await keyboard.dispatch('shift+Tab');
 	await keyboard.type(`for (let prop in {a: 1, b: 2, c: 3})`);
@@ -164,13 +166,15 @@ async function run(): Promise<void> {
 	await keyboard.type(`console.log(prop);`);
 	await end();
 
-	const srt = scriptPlayer.getSrt();
-	const speakXmlFile = path.join(testDataPath, 'speak.srt');
-	await fs.promises.writeFile(speakXmlFile, srt);
-	console.log('Saved to ' + speakXmlFile);
+	// const srt = scriptPlayer.getSrt();
+	// const speakXmlFile = path.join(testDataPath, 'speak.srt');
+	// await fs.promises.writeFile(speakXmlFile, srt);
+	// console.log('Saved to ' + speakXmlFile);
 	// console.log(srt);
 
 	app.stop();
+	console.log(getTimeFormat() + ' app stop');
+	scriptPlayer.autoWriteFile();
 	// save
 	// await app.workbench.editors.saveOpenedFile();
 }
